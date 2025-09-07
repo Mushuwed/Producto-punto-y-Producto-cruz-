@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculadora de Vectores</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+      background: linear-gradient(135deg, #2193b0, #6dd5ed);
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .card {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+      padding: 25px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      animation: fadeIn 0.7s ease-in-out;
+    }
+    h1 {
+      color: #0d47a1;
+      margin-bottom: 15px;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+      color: #1565c0;
+    }
+    input {
+      width: 70px;
+      margin: 5px;
+      padding: 8px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      text-align: center;
+      transition: 0.2s;
+    }
+    input:focus {
+      border-color: #42a5f5;
+      box-shadow: 0 0 5px #90caf9;
+      outline: none;
+    }
+    select {
+      margin: 10px;
+      padding: 8px;
+      font-size: 15px;
+      border-radius: 8px;
+      border: 1px solid #90caf9;
+      background: #e3f2fd;
+      transition: 0.2s;
+    }
+    select:focus {
+      border-color: #42a5f5;
+      outline: none;
+    }
+    button {
+      margin-top: 20px;
+      padding: 12px 25px;
+      font-size: 16px;
+      border-radius: 30px;
+      border: none;
+      background: linear-gradient(135deg, #42a5f5, #1e88e5);
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .resultado {
+      margin-top: 25px;
+      padding: 15px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #0d47a1;
+      background: #e3f2fd;
+      border-radius: 12px;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.1);
+    }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(-10px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Calculadora de Vectores</h1>
+
+    <label for="dimension">Dimensión:</label>
+    <select id="dimension" onchange="cambiarDimension()">
+      <option value="2">2D (x,y)</option>
+      <option value="3" selected>3D (x,y,z)</option>
+    </select>
+
+    <label for="operacion">Operación:</label>
+    <select id="operacion">
+      <option value="punto">Producto Punto</option>
+      <option value="cruz">Producto Cruz</option>
+    </select>
+
+    <h3>Vector A</h3>
+    <input type="number" id="ax" placeholder="x1">
+    <input type="number" id="ay" placeholder="y1">
+    <input type="number" id="az" placeholder="z1">
+
+    <h3>Vector B</h3>
+    <input type="number" id="bx" placeholder="x2">
+    <input type="number" id="by" placeholder="y2">
+    <input type="number" id="bz" placeholder="z2">
+
+    <div>
+      <button onclick="calcular()">Calcular</button>
+    </div>
+
+    <div class="resultado" id="resultado">Aquí aparecerá el resultado</div>
+  </div>
+
+  <script>
+    function cambiarDimension() {
+      let dim = document.getElementById("dimension").value;
+      let az = document.getElementById("az");
+      let bz = document.getElementById("bz");
+
+      if (dim == "2") {
+        az.style.display = "none";
+        bz.style.display = "none";
+      } else {
+        az.style.display = "inline";
+        bz.style.display = "inline";
+      }
+    }
+
+    function calcular() {
+      let dim = document.getElementById("dimension").value;
+      let operacion = document.getElementById("operacion").value;
+
+      let ax = parseFloat(document.getElementById("ax").value) || 0;
+      let ay = parseFloat(document.getElementById("ay").value) || 0;
+      let az = parseFloat(document.getElementById("az").value) || 0;
+      let bx = parseFloat(document.getElementById("bx").value) || 0;
+      let by = parseFloat(document.getElementById("by").value) || 0;
+      let bz = parseFloat(document.getElementById("bz").value) || 0;
+
+      let resultado = "";
+
+      if (operacion === "punto") {
+        if (dim == "2") {
+          resultado = "Producto punto = " + (ax*bx + ay*by);
+        } else {
+          resultado = "Producto punto = " + (ax*bx + ay*by + az*bz);
+        }
+      } else if (operacion === "cruz") {
+        if (dim == "2") {
+          resultado = "❌ El producto cruz no aplica en 2D";
+        } else {
+          let cx = ay*bz - az*by;
+          let cy = az*bx - ax*bz;
+          let cz = ax*by - ay*bx;
+
+          let cruzStr = "";
+          if (cx !== 0) cruzStr += (cx > 0 ? " + " : " - ") + Math.abs(cx) + "i";
+          if (cy !== 0) cruzStr += (cy > 0 ? " + " : " - ") + Math.abs(cy) + "j";
+          if (cz !== 0) cruzStr += (cz > 0 ? " + " : " - ") + Math.abs(cz) + "k";
+
+          if (cruzStr.startsWith(" + ")) cruzStr = cruzStr.slice(3);
+          if (cruzStr.startsWith(" - ")) cruzStr = "-" + cruzStr.slice(3);
+
+          resultado = "Producto cruz = " + cruzStr;
+        }
+      }
+
+      document.getElementById("resultado").innerHTML = resultado;
+    }
+
+    cambiarDimension();
+  </script>
+</body>
+</html>
