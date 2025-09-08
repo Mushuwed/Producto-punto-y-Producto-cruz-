@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Producto Punto y Producto Cruz</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg1: #74ebd5;
+      --bg2: #ACB6E5;
+      --card:#ffffff;
+      --accent:#4e73df;
+      --muted:#6b7280;
+    }
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg,var(--bg1),var(--bg2));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+    }
+    .app{
+      width:100%;
+      max-width:900px;
+      background:#ffffffcc;
+      border-radius:16px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+      display:grid;
+      grid-template-columns: 1fr 350px;
+      gap:20px;
+      padding:24px;
+      backdrop-filter: blur(6px);
+    }
+    header{grid-column:1/-1;margin-bottom:10px}
+    h1{margin:0;font-size:20px;color:#0f172a}
+    p.lead{margin:4px 0 0;font-size:13px;color:var(--muted)}
+    .controls{background:var(--card);padding:16px;border-radius:12px;box-shadow:0 4px 18px rgba(0,0,0,0.1)}
+    .row{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+    label{font-size:13px;color:var(--muted);min-width:90px}
+    select, input{padding:10px;border-radius:8px;border:1px solid #ddd;font-size:14px}
+    .vectors{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .vector-card{background:#f9fafb;padding:12px;border-radius:10px}
+    .vector-card h3{margin:0;font-size:14px}
+    .inputs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px}
+    .result-panel{background:var(--card);padding:16px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.1)}
+    .result-block{background:#f1f5f9;padding:12px;border-radius:8px;font-weight:600;font-size:16px}
+    .actions{display:flex;gap:8px;margin-top:10px}
+    button{padding:10px 14px;border:none;border-radius:8px;cursor:pointer;font-weight:600}
+    .btn{background:var(--accent);color:white}
+    .secondary{background:#f3f4f6;color:#111827}
+    @media(max-width:800px){.app{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div>
+        <h1>Producto Punto y Producto Cruz</h1>
+        <p class="lead">Elige 2D o 3D, escribe números (acepta negativos y decimales) y obtén el resultado.</p>
+      </div>
+    </header>
+
+    <div class="controls">
+      <div class="row">
+        <label for="op">Operación</label>
+        <select id="op">
+          <option value="dot">Producto Punto</option>
+          <option value="cross">Producto Cruz</option>
+        </select>
+      </div>
+      <div class="row">
+        <label for="dim">Dimensiones</label>
+        <select id="dim">
+          <option value="2">2D</option>
+          <option value="3">3D</option>
+        </select>
+      </div>
+
+      <div class="vectors">
+        <div class="vector-card">
+          <h3>Vector A</h3>
+          <div class="inputs">
+            <input id="a1" type="number" step="any" placeholder="Ax">
+            <input id="a2" type="number" step="any" placeholder="Ay">
+            <input id="a3" type="number" step="any" placeholder="Az">
+          </div>
+        </div>
+        <div class="vector-card">
+          <h3>Vector B</h3>
+          <div class="inputs">
+            <input id="b1" type="number" step="any" placeholder="Bx">
+            <input id="b2" type="number" step="any" placeholder="By">
+            <input id="b3" type="number" step="any" placeholder="Bz">
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="calc" class="btn">Calcular</button>
+        <button id="reset" class="secondary">Limpiar</button>
+      </div>
+    </div>
+
+    <div class="result-panel">
+      <h4>Resultado</h4>
+      <div id="mainResult" class="result-block">Introduce datos y presiona Calcular</div>
+      <div id="steps" style="margin-top:10px;font-size:13px;color:#374151"></div>
+    </div>
+  </div>
+
+  <script>
+    const $ = id => document.getElementById(id);
+    const op=$("op"), dim=$("dim");
+    const a1=$("a1"),a2=$("a2"),a3=$("a3");
+    const b1=$("b1"),b2=$("b2"),b3=$("b3");
+    const mainResult=$("mainResult"),steps=$("steps");
+
+    function val(el){return parseFloat(el.value)||0;}
+    function pretty(n){return Number.isInteger(n)?n:n.toFixed(3);}
+
+    function compute(){
+      const D=parseInt(dim.value);
+      const A=[val(a1),val(a2),D===3?val(a3):0];
+      const B=[val(b1),val(b2),D===3?val(b3):0];
+      if(op.value==="dot"){
+        let sum=0,exp=[];
+        for(let i=0;i<D;i++){sum+=A[i]*B[i];exp.push(`${A[i]}×${B[i]}=${pretty(A[i]*B[i])}`);}
+        mainResult.textContent=`Producto Punto = ${pretty(sum)}`;
+        steps.innerHTML=`${exp.join("<br>")}<br><b>Suma:</b> ${pretty(sum)}`;
+      }else{
+        if(D===2){
+          const k=A[0]*B[1]-A[1]*B[0];
+          mainResult.textContent=`Producto Cruz (2D) = ${pretty(k)} k`;
+          steps.innerHTML=`k = Ax·By - Ay·Bx = ${A[0]}·${B[1]} - ${A[1]}·${B[0]} = ${pretty(k)}`;
+        }else{
+          const i=A[1]*B[2]-A[2]*B[1];
+          const j=A[2]*B[0]-A[0]*B[2];
+          const k=A[0]*B[1]-A[1]*B[0];
+          mainResult.textContent=`Producto Cruz (3D) = ${pretty(i)} i + ${pretty(j)} j + ${pretty(k)} k`;
+          steps.innerHTML=`i = Ay·Bz - Az·By = ${pretty(i)}<br>
+          j = Az·Bx - Ax·Bz = ${pretty(j)}<br>
+          k = Ax·By - Ay·Bx = ${pretty(k)}`;
+        }
+      }
+    }
+
+    $("calc").addEventListener("click",compute);
+    $("reset").addEventListener("click",()=>{
+      [a1,a2,a3,b1,b2,b3].forEach(x=>x.value="");
+      mainResult.textContent="Introduce datos y presiona Calcular";
+      steps.innerHTML="";
+    });
+    function adjustDim(){if(dim.value==="2"){a3.style.display=b3.style.display="none";}else{a3.style.display=b3.style.display="";}}
+    dim.addEventListener("change",adjustDim); adjustDim();
+  </script>
+</body>
+</html>
