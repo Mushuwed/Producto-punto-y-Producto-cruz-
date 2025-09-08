@@ -89,12 +89,103 @@
             <input id="a3" type="text" placeholder="Az">
           </div>
         </div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Producto Punto y Producto Cruz</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg1: #74ebd5;
+      --bg2: #ACB6E5;
+      --card:#ffffff;
+      --accent:#4e73df;
+      --muted:#6b7280;
+    }
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg,var(--bg1),var(--bg2));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+    }
+    .app{
+      width:100%;
+      max-width:900px;
+      background:#ffffffcc;
+      border-radius:16px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+      display:grid;
+      grid-template-columns: 1fr 350px;
+      gap:20px;
+      padding:24px;
+      backdrop-filter: blur(6px);
+    }
+    header{grid-column:1/-1;margin-bottom:10px}
+    h1{margin:0;font-size:20px;color:#0f172a}
+    p.lead{margin:4px 0 0;font-size:13px;color:var(--muted)}
+    .controls{background:var(--card);padding:16px;border-radius:12px;box-shadow:0 4px 18px rgba(0,0,0,0.1)}
+    .row{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+    label{font-size:13px;color:var(--muted);min-width:90px}
+    select, input{padding:10px;border-radius:8px;border:1px solid #ddd;font-size:14px}
+    .vectors{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .vector-card{background:#f9fafb;padding:12px;border-radius:10px}
+    .vector-card h3{margin:0;font-size:14px}
+    .inputs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px}
+    .result-panel{background:var(--card);padding:16px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.1)}
+    .result-block{background:#f1f5f9;padding:12px;border-radius:8px;font-weight:600;font-size:16px}
+    .actions{display:flex;gap:8px;margin-top:10px}
+    button{padding:10px 14px;border:none;border-radius:8px;cursor:pointer;font-weight:600}
+    .btn{background:var(--accent);color:white}
+    .secondary{background:#f3f4f6;color:#111827}
+    @media(max-width:800px){.app{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div>
+        <h1>Producto Punto y Producto Cruz</h1>
+        <p class="lead">Elige 2D o 3D, escribe números (acepta negativos y decimales) y obtén el resultado.</p>
+      </div>
+    </header>
+
+    <div class="controls">
+      <div class="row">
+        <label for="op">Operación</label>
+        <select id="op">
+          <option value="dot">Producto Punto</option>
+          <option value="cross">Producto Cruz</option>
+        </select>
+      </div>
+      <div class="row">
+        <label for="dim">Dimensiones</label>
+        <select id="dim">
+          <option value="2">2D</option>
+          <option value="3">3D</option>
+        </select>
+      </div>
+
+      <div class="vectors">
+        <div class="vector-card">
+          <h3>Vector A</h3>
+          <div class="inputs">
+            <input id="a1" type="text" inputmode="decimal" pattern="[-+]?[0-9]*[.,]?[0-9]+" placeholder="Ax">
+            <input id="a2" type="text" inputmode="decimal" pattern="[-+]?[0-9]*[.,]?[0-9]+" placeholder="Ay">
+            <input id="a3" type="text" inputmode="decimal" pattern="[-+]?[0-9]*[.,]?[0-9]+" placeholder="Az">
+          </div>
+        </div>
         <div class="vector-card">
           <h3>Vector B</h3>
           <div class="inputs">
-            <input id="b1" type="text" placeholder="Bx">
-            <input id="b2" type="text" placeholder="By">
-            <input id="b3" type="text" placeholder="Bz">
+            <input id="b1" type="text" inputmode="decimal" pattern="[-+]?[0-9]*[.,]?[0-9]+" placeholder="Bx">
+            <input id="b2" type="text" inputmode="decimal" pattern="[-+]?[0-9]*[.,]?[0-9]+" placeholder="By">
+            <input id="b3" type="text" inputmode="decimal" pattern="[-+]?[0-9]*[.,]?[0-9]+" placeholder="Bz">
           </div>
         </div>
       </div>
