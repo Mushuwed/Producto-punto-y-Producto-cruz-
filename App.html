@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Producto Punto y Cruz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+    }
+    h2 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+    select, input {
+      padding: 10px;
+      margin: 10px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    button {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 15px;
+      background: #4e73df;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+    button:hover {
+      background: #2e59d9;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 10px;
+      background: #f1f5f9;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .inputs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Producto Punto y Cruz</h2>
+
+    <label>Operación:</label>
+    <select id="operacion">
+      <option value="punto">Producto Punto</option>
+      <option value="cruz">Producto Cruz</option>
+    </select>
+
+    <label>Dimensiones:</label>
+    <select id="dimension">
+      <option value="2">2D</option>
+      <option value="3">3D</option>
+    </select>
+
+    <div id="vectorInputs" class="inputs"></div>
+
+    <button onclick="calcular()">Calcular</button>
+
+    <div id="resultado" class="result"></div>
+  </div>
+
+  <script>
+    const vectorInputs = document.getElementById("vectorInputs");
+    const dimensionSelect = document.getElementById("dimension");
+    const operacionSelect = document.getElementById("operacion");
+
+    function crearInputs() {
+      const dim = parseInt(dimensionSelect.value);
+      vectorInputs.innerHTML = "";
+      for (let v = 1; v <= 2; v++) {
+        for (let i = 1; i <= dim; i++) {
+          const input = document.createElement("input");
+          input.type = "number";
+          input.step = "any";
+          input.placeholder = `V${v}${i}`;
+          input.id = `v${v}${i}`;
+          vectorInputs.appendChild(input);
+        }
+      }
+    }
+
+    dimensionSelect.addEventListener("change", crearInputs);
+    operacionSelect.addEventListener("change", crearInputs);
+
+    crearInputs(); // inicializar
+
+    function calcular() {
+      const dim = parseInt(dimensionSelect.value);
+      let v1 = [], v2 = [];
+      for (let i = 1; i <= dim; i++) {
+        v1.push(parseFloat(document.getElementById(`v1${i}`).value) || 0);
+        v2.push(parseFloat(document.getElementById(`v2${i}`).value) || 0);
+      }
+
+      let res = "";
+      if (operacionSelect.value === "punto") {
+        let dot = v1.reduce((acc, val, i) => acc + val * v2[i], 0);
+        res = `Producto Punto = ${dot}`;
+      } else {
+        if (dim === 2) {
+          let cross = v1[0] * v2[1] - v1[1] * v2[0];
+          res = `Producto Cruz (2D) = ${cross} k`;
+        } else {
+          let i = v1[1] * v2[2] - v1[2] * v2[1];
+          let j = -(v1[0] * v2[2] - v1[2] * v2[0]);
+          let k = v1[0] * v2[1] - v1[1] * v2[0];
+          res = `Producto Cruz (3D) = ${i} i + ${j} j + ${k} k`;
+        }
+      }
+
+      document.getElementById("resultado").innerText = res;
+    }
+  </script>
+</body>
+</html>
