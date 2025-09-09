@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Producto Punto y Cruz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #74ebd5, #ACB6E5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
+      width: 380px;
+      text-align: center;
+    }
+    h1 {
+      font-size: 22px;
+      color: #333;
+    }
+    select, input {
+      padding: 8px;
+      margin: 6px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      width: 70px;
+      text-align: center;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 8px;
+      background: #4CAF50;
+      color: white;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    .minus-btn {
+      background: #f44336;
+      margin-left: 5px;
+    }
+    .result {
+      margin-top: 15px;
+      font-weight: bold;
+      color: #222;
+      font-size: 18px;
+    }
+    .vector-inputs {
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Producto Punto y Cruz</h1>
+
+    <label>Dimensión:</label>
+    <select id="dimension">
+      <option value="2">2D</option>
+      <option value="3" selected>3D</option>
+    </select>
+
+    <label>Operación:</label>
+    <select id="operacion">
+      <option value="punto">Producto Punto</option>
+      <option value="cruz">Producto Cruz</option>
+    </select>
+
+    <div class="vector-inputs" id="vector1"></div>
+    <div class="vector-inputs" id="vector2"></div>
+
+    <button onclick="calcular()">Calcular</button>
+
+    <div class="result" id="resultado"></div>
+  </div>
+
+  <script>
+    const vector1Div = document.getElementById("vector1");
+    const vector2Div = document.getElementById("vector2");
+    const dimensionSelect = document.getElementById("dimension");
+
+    function crearCampos() {
+      const dim = parseInt(dimensionSelect.value);
+      vector1Div.innerHTML = "<b>Vector A:</b><br>";
+      vector2Div.innerHTML = "<b>Vector B:</b><br>";
+
+      for (let i = 0; i < dim; i++) {
+        vector1Div.innerHTML += `<input type="text" id="a${i}"> 
+        <button class="minus-btn" onclick="ponerMenos('a${i}')">−</button>`;
+      }
+
+      vector2Div.innerHTML += "<br>";
+      for (let i = 0; i < dim; i++) {
+        vector2Div.innerHTML += `<input type="text" id="b${i}"> 
+        <button class="minus-btn" onclick="ponerMenos('b${i}')">−</button>`;
+      }
+    }
+
+    function ponerMenos(id) {
+      const campo = document.getElementById(id);
+      if (!campo.value.startsWith("-")) {
+        campo.value = "-" + campo.value;
+      }
+    }
+
+    function calcular() {
+      const dim = parseInt(dimensionSelect.value);
+      const operacion = document.getElementById("operacion").value;
+      let A = [], B = [];
+
+      for (let i = 0; i < dim; i++) {
+        A.push(parseFloat(document.getElementById("a"+i).value) || 0);
+        B.push(parseFloat(document.getElementById("b"+i).value) || 0);
+      }
+
+      let resultado = "";
+
+      if (operacion === "punto") {
+        let dot = 0;
+        for (let i = 0; i < dim; i++) dot += A[i] * B[i];
+        resultado = "A · B = " + dot;
+      } else {
+        if (dim === 2) {
+          let cruz = A[0]*B[1] - A[1]*B[0];
+          resultado = "A × B = " + cruz + " (k)";
+        } else {
+          let i = A[1]*B[2] - A[2]*B[1];
+          let j = -(A[0]*B[2] - A[2]*B[0]);
+          let k = A[0]*B[1] - A[1]*B[0];
+          resultado = `A × B = (${i})i + (${j})j + (${k})k`;
+        }
+      }
+
+      document.getElementById("resultado").innerText = resultado;
+    }
+
+    dimensionSelect.addEventListener("change", crearCampos);
+    crearCampos();
+  </script>
+</body>
+</html>
